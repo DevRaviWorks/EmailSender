@@ -5,3 +5,5 @@
 /EmailSender/bin/Debug/netcoreapp3.1
 /EmailSender/obj
 /.vs/EmailSender/v16
+/EmailSender/bin/Debug/net5.0-windows
+/.vs/EmailSender/DesignTimeBuild

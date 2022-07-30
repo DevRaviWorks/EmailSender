@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -25,7 +26,7 @@ namespace EmailSender
             try
             {
                 var userName = "your_gmail_Id"; //from E- mail ID
-                var password="your_gmail_App_password"; //Gmail App password 
+                var password= "your_gmail_App_password"; //Gmail App password 
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.From = new MailAddress(userName);
@@ -53,14 +54,19 @@ namespace EmailSender
 
         private string GetHTMLBody()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            string sb = "<ul>";
-            foreach (var ip in host.AddressList)
+            String address = "";
+            WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
+            using (WebResponse response = request.GetResponse())
+            using (StreamReader stream = new StreamReader(response.GetResponseStream()))
             {
-                sb += string.Format("<li>your {0} is : {1}</li>", ip.AddressFamily.ToString(), ip.ToString());
+                address = stream.ReadToEnd();
             }
-            sb += "</ul>";
-            return sb;
+
+            int first = address.IndexOf("Address: ") + 9;
+            int last = address.LastIndexOf("</body>");
+            address = address.Substring(first, last - first);
+
+            return "<b>Your public IP Address:<b> "+address;
         }
     }
 }
